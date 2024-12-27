@@ -37,7 +37,7 @@ class FNN():
     def FeedForward(self):
         for i in range(self.num_hidden):
             self.layers[i+1] = self.ReLU(np.dot(self.weights[i], self.layers[i]) + self.biases[i])
-        self.layers[-1] = self.SoftMax(np.dot(self.weights[-1], self.layers[-1]) + self.biases[-1])
+        self.layers[-1] = self.SoftMax(np.dot(self.weights[-1], self.layers[-2]) + self.biases[-1])
 
 class Training():
     def __init__(self, FNN, learning_rate = 0.01):

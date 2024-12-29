@@ -108,16 +108,17 @@ class Training():
         return w_gradient, b_gradient
     
     def train(self, num_epochs, batch_size):
-        train_images = return_train_images
-        train_labels = return_train_labels
+        train_images = return_train_images()
+        train_labels = return_train_labels()
 
         train_images = (train_images.reshape(train_images.shape[0], -1)) / 255
 
-        combined = list(zip(train_images, train_labels))
-        random.shuffle(combined)
-        train_images, train_labels = zip(*combined)
-
-        for i in range(num_epochs):
-            for j in range(1, len(train_images) // batch_size):
+        for _ in range(num_epochs):
+            combined = list(zip(train_images, train_labels))
+            random.shuffle(combined)
+            shuffled_train_images, shuffled_train_labels = zip(*combined)
+            for j in range(1, len(shuffled_train_images) // batch_size):
                 index = j * batch_size
-                self.gradient_descent(train_images[index-batch_size:index], train_labels[index-batch_size:index])
+                self.gradient_descent(shuffled_train_images[index-batch_size:index], 
+                                      shuffled_train_labels[index-batch_size:index])
+        

@@ -5,27 +5,29 @@ import os
 
 class FNN():
     def __init__(self):
+        # Initialize FNN parameters
         self.input_size = 784
         self.num_hidden = 2
         self.hidden_size = 128
         self.output_size = 10
-        folder_path = os.path.join(os.path.dirname(__file__), "Weights and Biases")
+        self.folder_path = os.path.join(os.path.dirname(__file__), "Weights and Biases")
 
         self.layers = []
         self.weights = []
         self.biases = []
 
+        # Initialize layers, weights, and biases lists
         self.layers.append(np.zeros(self.input_size))
         for i in range(self.num_hidden):
             self.layers.append(np.zeros(self.hidden_size))
         self.layers.append(np.zeros(self.output_size))
 
         for i in range(self.num_hidden + 1): 
-            weight_file = os.path.join(folder_path, f'weight_layer_{i}.npy')
+            weight_file = os.path.join(self.folder_path, f'weight_layer_{i}.npy')
             self.weights.append(np.load(weight_file))
 
         for i in range(self.num_hidden + 1):
-            bias_file = os.path.join(folder_path, f'bias_layer_{i}.npy')
+            bias_file = os.path.join(self.folder_path, f'bias_layer_{i}.npy')
             self.biases.append(np.load(bias_file))
 
     def SoftMax(self, x):
@@ -54,8 +56,8 @@ class FNN():
         return self.layers, zs
 
 class Training():
-    def __init__(self, FNN, learning_rate = 0.01):
-        self.FNN = FNN
+    def __init__(self, learning_rate = 0.01):
+        self.FNN = FNN()
         self.learning_rate = learning_rate
 
     def dReLU(self, x):
@@ -107,6 +109,13 @@ class Training():
         # Return gradient vectors
         return w_gradient, b_gradient
     
+    def update_parameters(self):
+        for i, w in enumerate(self.FNN.weights):
+            np.save(os.path.join(self.FNN.folder_path, f'weight_layer_{i}.npy'), w)
+
+        for i, b in enumerate(self.FNN.biases):
+            np.save(os.path.join(self.FNN.folder_path, f'bias_layer_{i}.npy'), b)
+    
     def train(self, num_epochs, batch_size):
         train_images = return_train_images()
         train_labels = return_train_labels()
@@ -117,8 +126,32 @@ class Training():
             combined = list(zip(train_images, train_labels))
             random.shuffle(combined)
             shuffled_train_images, shuffled_train_labels = zip(*combined)
+
             for j in range(1, len(shuffled_train_images) // batch_size):
                 index = j * batch_size
                 self.gradient_descent(shuffled_train_images[index-batch_size:index], 
                                       shuffled_train_labels[index-batch_size:index])
+            
+            self.update_parameters()
+    
+class Test():
+    def __init__(self):
+        self.FNN = FNN()
+    
+    def evaluate(self):
+        test_images = return_test_images()
+        test_labels = return_test_labels()
+        correct = 0
+
+        test_images = (test_images.reshape(test_images.shape[0], -1)) / 255
+
+        for i in range(len(test_images)):
+            activations, _ = self.FNN.FeedForward(test_images[i])
+            if np.argmax(activations[-1]) == test_labels[i]: correct += 1
+
+        return correct / len(test_images)
+
+
+
+            
         

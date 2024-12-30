@@ -161,9 +161,5 @@ class Test():
         return correct / len(test_images)
 
 if __name__ == "__main__":
-    #Train = Training(0.001)
-    #Train.train(50, 100)
-
-   test = Test()
-   accuracy = test.evaluate()
-   print("Accuracy for epoch " + str(accuracy))
+    Train = Training(0.001)
+    Train.train(50, 100)

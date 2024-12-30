@@ -49,13 +49,13 @@ def return_test_labels():
     return train_labels
 
 # Display a random image
-train_images = return_test_images()
-train_labels = return_test_labels()
-random_index = np.random.randint(0, train_images.shape[0])
-random_image = train_images[random_index]
-random_label = train_labels[random_index]
+#train_images = return_test_images()
+#train_labels = return_test_labels()
+#random_index = np.random.randint(0, train_images.shape[0])
+#random_image = train_images[random_index]
+#random_label = train_labels[random_index]
 
-plt.imshow(random_image, cmap='gray')
-plt.title(f"Label: {random_label}")
-plt.axis('off')
-plt.show()
+#plt.imshow(random_image, cmap='gray')
+#plt.title(f"Label: {random_label}")
+#plt.axis('off')
+#plt.show()

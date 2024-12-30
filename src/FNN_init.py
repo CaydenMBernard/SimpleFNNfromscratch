@@ -8,10 +8,10 @@ hidden_size = 128
 output_size = 10
 
 # Initialize weights
-weights = [np.random.randn(input_size, hidden_size)]
+weights = [np.random.randn(hidden_size, input_size)]
 for _ in range(num_hidden - 1):
     weights.append(np.random.randn(hidden_size, hidden_size))
-weights.append(np.random.randn(hidden_size, output_size))  # Output layer weights
+weights.append(np.random.randn(output_size, hidden_size))  # Output layer weights
 
 # Initialize biases
 biases = [np.zeros(hidden_size) for _ in range(num_hidden)]

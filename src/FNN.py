@@ -99,12 +99,12 @@ class Training():
 
         # Set output layer gradients, SoftMax with Cross-Entropy Loss
         b_gradient[-1] = a[-1] - e 
-        w_gradient[-1] = np.dot(b_gradient[-1], np.transpose(a[-2]))
+        w_gradient[-1] = np.dot(b_gradient[-1].reshape(-1, 1), a[-2].reshape(1, -1))
 
         # Set hidden layer gradients, ReLU
         for i in range(2, self.FNN.num_hidden + 2):
-            b_gradient[-i] = np.dot(np.transpose(self.FNN.weights[-i+1], b_gradient[-i-1])) * self.dReLU(z[-i])
-            w_gradient[-i] = np.dot(b_gradient[-i], np.transpose(a[-i-1]))
+            b_gradient[-i] = np.dot(self.FNN.weights[-i + 1].T, b_gradient[-i + 1]) * self.dReLU(z[-i])
+            w_gradient[-i] = np.dot(b_gradient[-i].reshape(-1, 1), a[-i - 1].reshape(1, -1))
 
         # Return gradient vectors
         return w_gradient, b_gradient
@@ -122,7 +122,7 @@ class Training():
 
         train_images = (train_images.reshape(train_images.shape[0], -1)) / 255
 
-        for _ in range(num_epochs):
+        for i in range(num_epochs):
             combined = list(zip(train_images, train_labels))
             random.shuffle(combined)
             shuffled_train_images, shuffled_train_labels = zip(*combined)
@@ -131,27 +131,39 @@ class Training():
                 index = j * batch_size
                 self.gradient_descent(shuffled_train_images[index-batch_size:index], 
                                       shuffled_train_labels[index-batch_size:index])
+                percent_done = float(j / (len(shuffled_train_images) // batch_size))
+                print(percent_done, end="\r")
+
+            self.learning_rate *= 0.995
             
             self.update_parameters()
+
+            test = Test()
+            accuracy = test.evaluate()
+            print("Accuracy for epoch " + str(i) + ": " + str(accuracy))
+            
     
 class Test():
     def __init__(self):
         self.FNN = FNN()
     
     def evaluate(self):
-        test_images = return_test_images()
-        test_labels = return_test_labels()
+        test_images = return_train_images()
+        test_labels = return_train_labels()
         correct = 0
 
         test_images = (test_images.reshape(test_images.shape[0], -1)) / 255
 
         for i in range(len(test_images)):
-            activations, _ = self.FNN.FeedForward(test_images[i])
+            activations, _ = self.FNN.FeedForward(test_images[i].reshape(-1))
             if np.argmax(activations[-1]) == test_labels[i]: correct += 1
 
         return correct / len(test_images)
 
+if __name__ == "__main__":
+    #Train = Training(0.001)
+    #Train.train(50, 100)
 
-
-            
-        
+   test = Test()
+   accuracy = test.evaluate()
+   print("Accuracy for epoch " + str(accuracy))

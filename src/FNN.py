@@ -8,7 +8,7 @@ class FNN():
         # Initialize FNN parameters
         self.input_size = 784
         self.num_hidden = 2
-        self.hidden_size = 128
+        self.hidden_size = 150
         self.output_size = 10
         self.folder_path = os.path.join(os.path.dirname(__file__), "Weights and Biases")
 
@@ -134,15 +134,14 @@ class Training():
                 percent_done = float(j / (len(shuffled_train_images) // batch_size))
                 print(percent_done, end="\r")
 
-            self.learning_rate *= 0.995
+            self.learning_rate *= 0.999
             
             self.update_parameters()
 
             test = Test()
             accuracy = test.evaluate()
             print("Accuracy for epoch " + str(i) + ": " + str(accuracy))
-            
-    
+
 class Test():
     def __init__(self):
         self.FNN = FNN()
@@ -161,5 +160,8 @@ class Test():
         return correct / len(test_images)
 
 if __name__ == "__main__":
-    Train = Training(0.001)
-    Train.train(50, 100)
+    #Train = Training()
+    #Train.train(50, 60)
+    tet = Test()
+    hi = tet.evaluate()
+    print(hi)

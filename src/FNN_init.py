@@ -4,15 +4,14 @@ import numpy as np
 # Network parameters
 input_size = 784
 num_hidden = 2
-hidden_size = 128
+hidden_size = 150
 output_size = 10
 
-# Initialize weights
-weights = [np.random.randn(hidden_size, input_size)]
+# Initialize weights using He initialization
+weights = [np.random.randn(hidden_size, input_size) * np.sqrt(2/input_size)]
 for _ in range(num_hidden - 1):
-    weights.append(np.random.randn(hidden_size, hidden_size))
-weights.append(np.random.randn(output_size, hidden_size))  # Output layer weights
-
+    weights.append(np.random.randn(hidden_size, hidden_size) * np.sqrt(2/hidden_size))
+weights.append(np.random.randn(output_size, hidden_size) * np.sqrt(2/hidden_size))
 # Initialize biases
 biases = [np.zeros(hidden_size) for _ in range(num_hidden)]
 biases.append(np.zeros(output_size))  # Output layer biases

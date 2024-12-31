@@ -147,8 +147,8 @@ class Test():
         self.FNN = FNN()
     
     def evaluate(self):
-        test_images = return_train_images()
-        test_labels = return_train_labels()
+        test_images = return_test_images()
+        test_labels = return_test_labels()
         correct = 0
 
         test_images = (test_images.reshape(test_images.shape[0], -1)) / 255
@@ -160,8 +160,5 @@ class Test():
         return correct / len(test_images)
 
 if __name__ == "__main__":
-    #Train = Training()
-    #Train.train(50, 60)
-    tet = Test()
-    hi = tet.evaluate()
-    print(hi)
+    Train = Training()
+    Train.train(50, 60)

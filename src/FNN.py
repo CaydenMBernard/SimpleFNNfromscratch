@@ -140,7 +140,7 @@ class Training():
 
             test = Test()
             accuracy = test.evaluate()
-            print("Accuracy for epoch " + str(i) + ": " + str(accuracy))
+            print(f"Accuracy for epoch {str(i)}: {str(accuracy)}")
 
 class Test():
     def __init__(self):
